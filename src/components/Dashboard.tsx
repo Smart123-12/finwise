@@ -181,7 +181,7 @@ export default function Dashboard() {
                   </defs>
                   <XAxis dataKey="month" tick={{ fontSize: 11, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 10, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />
-                  <Tooltip formatter={(v: number) => [`₹${v.toLocaleString("en-IN")}`, ""]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "10px", fontSize: "12px" }} />
+                  <Tooltip formatter={(v) => [`₹${Number(v).toLocaleString("en-IN")}`, ""]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "10px", fontSize: "12px" }} />
                   <Area type="monotone" dataKey="income" stroke="#52C9A0" strokeWidth={2.5} fill="url(#incGrad)" name="Income" />
                   <Area type="monotone" dataKey="expense" stroke="#F4956A" strokeWidth={2.5} fill="url(#expGrad)" name="Expense" />
                 </AreaChart>
@@ -195,7 +195,7 @@ export default function Dashboard() {
                   <Pie data={expenseBreakdown} cx="50%" cy="50%" innerRadius={42} outerRadius={66} paddingAngle={3} dataKey="value">
                     {expenseBreakdown.map((e, i) => <Cell key={i} fill={e.color} />)}
                   </Pie>
-                  <Tooltip formatter={(v: number) => [`₹${v.toLocaleString("en-IN")}`, ""]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "11px" }} />
+                  <Tooltip formatter={(v) => [`₹${Number(v).toLocaleString("en-IN")}`, ""]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "11px" }} />
                 </RePieChart>
               </ResponsiveContainer>
               {expenseBreakdown.slice(0, 4).map((e) => (
