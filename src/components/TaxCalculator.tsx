@@ -222,7 +222,7 @@ export default function TaxCalculator() {
                 <BarChart data={chartData} barGap={12}>
                   <XAxis dataKey="name" tick={{ fontSize: 12, fill: "var(--text-secondary)" }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: "var(--text-muted)" }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}K`} />
-                  <Tooltip formatter={(v: number) => [fmt(v), "Tax"]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "13px" }} />
+                  <Tooltip formatter={(v) => [fmt(Number(v)), "Tax"]} contentStyle={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: "13px" }} />
                   <Bar dataKey="tax" radius={[6, 6, 0, 0]}>
                     {chartData.map((entry, i) => (
                       <Cell key={i} fill={entry.color} />
