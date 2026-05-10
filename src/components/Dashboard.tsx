@@ -59,14 +59,54 @@ const goals = [
 
 export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [txForm, setTxForm] = useState({ desc: "", amt: "", cat: "Food", type: "expense" });
+  const [txList, setTxList] = useState(recentTx);
+
+  const addTransaction = () => {
+    if (!txForm.desc || !txForm.amt) return;
+    const newTx = { desc: txForm.desc, cat: txForm.cat, date: "Today", amt: txForm.type === "expense" ? -Math.abs(Number(txForm.amt)) : Math.abs(Number(txForm.amt)), icon: txForm.type === "expense" ? "💸" : "💰" };
+    setTxList([newTx, ...txList]);
+    setShowModal(false);
+    setTxForm({ desc: "", amt: "", cat: "Food", type: "expense" });
+  };
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "var(--bg-light)" }}>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div onClick={() => setSidebarOpen(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 99, backdropFilter: "blur(2px)" }} />
+      )}
+
+      {/* Add Transaction Modal */}
+      {showModal && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
+          <div style={{ background: "var(--bg-card)", borderRadius: "20px", padding: "28px", width: "100%", maxWidth: "400px", boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>
+            <h3 style={{ fontWeight: 800, fontSize: "18px", color: "var(--text-primary)", marginBottom: "20px" }}>Add Transaction</h3>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+              {["expense","income"].map(t => (
+                <button key={t} onClick={() => setTxForm({...txForm, type: t})} style={{ flex:1, padding:"9px", borderRadius:"10px", border:"2px solid", borderColor: txForm.type===t?"var(--primary-light)":"var(--border)", background: txForm.type===t?"var(--primary-pastel)":"transparent", color: txForm.type===t?"var(--primary-dark)":"var(--text-secondary)", fontWeight:700, fontSize:"13px", cursor:"pointer", textTransform:"capitalize" }}>{t}</button>
+              ))}
+            </div>
+            <input placeholder="Description" value={txForm.desc} onChange={e => setTxForm({...txForm, desc: e.target.value})} style={{ width:"100%", padding:"10px 14px", borderRadius:"10px", border:"1px solid var(--border)", background:"var(--bg-light)", color:"var(--text-primary)", fontSize:"14px", marginBottom:"12px" }} />
+            <input type="number" placeholder="Amount (₹)" value={txForm.amt} onChange={e => setTxForm({...txForm, amt: e.target.value})} style={{ width:"100%", padding:"10px 14px", borderRadius:"10px", border:"1px solid var(--border)", background:"var(--bg-light)", color:"var(--text-primary)", fontSize:"14px", marginBottom:"12px" }} />
+            <select value={txForm.cat} onChange={e => setTxForm({...txForm, cat: e.target.value})} style={{ width:"100%", padding:"10px 14px", borderRadius:"10px", border:"1px solid var(--border)", background:"var(--bg-light)", color:"var(--text-primary)", fontSize:"14px", marginBottom:"20px" }}>
+              {["Food","Transport","Shopping","Medical","Housing","EMI","Investment","Income","Other"].map(c => <option key={c}>{c}</option>)}
+            </select>
+            <div style={{ display:"flex", gap:"10px" }}>
+              <button onClick={() => setShowModal(false)} style={{ flex:1, padding:"11px", borderRadius:"10px", border:"1px solid var(--border)", background:"transparent", color:"var(--text-secondary)", fontWeight:600, cursor:"pointer" }}>Cancel</button>
+              <button onClick={addTransaction} style={{ flex:2, padding:"11px", borderRadius:"10px", border:"none", background:"var(--gradient-primary)", color:"white", fontWeight:700, cursor:"pointer" }}>Add Transaction</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Sidebar */}
       <aside style={{
         width: 236, background: "var(--bg-card)", borderRight: "1px solid var(--border)",
         display: "flex", flexDirection: "column", position: "fixed", top: 0, height: "100vh", zIndex: 100,
         boxShadow: "2px 0 16px rgba(91,127,212,0.05)",
+        transform: sidebarOpen ? "translateX(0)" : undefined,
       }} className="sidebar-desktop">
         <div style={{ padding: "18px 20px 14px", borderBottom: "1px solid var(--border)" }}>
           <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "9px" }}>
@@ -123,7 +163,7 @@ export default function Dashboard() {
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)", display: "none" }} className="mobile-menu-btn">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)", display: "none", padding: "6px" }} className="mobile-menu-btn">
               <Menu size={20} />
             </button>
             <div>
@@ -135,7 +175,7 @@ export default function Dashboard() {
             <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "5px 12px", borderRadius: "99px", background: "var(--secondary-pastel)" }}>
               <span style={{ color: "#1E7A5C", fontSize: "12px", fontWeight: 700 }}>AI Score: 92/100</span>
             </div>
-            <button style={{ display: "flex", alignItems: "center", gap: "7px", padding: "8px 16px", borderRadius: "10px", background: "var(--gradient-primary)", color: "white", border: "none", fontWeight: 600, fontSize: "13px", cursor: "pointer", boxShadow: "0 4px 12px rgba(91,127,212,0.3)" }}>
+            <button onClick={() => setShowModal(true)} style={{ display: "flex", alignItems: "center", gap: "7px", padding: "8px 16px", borderRadius: "10px", background: "var(--gradient-primary)", color: "white", border: "none", fontWeight: 600, fontSize: "13px", cursor: "pointer", boxShadow: "0 4px 12px rgba(91,127,212,0.3)" }}>
               <Plus size={14} /> Add Transaction
             </button>
           </div>
@@ -216,10 +256,10 @@ export default function Dashboard() {
             <div className="card" style={{ padding: "22px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
                 <h3 style={{ fontWeight: 700, fontSize: "14px", color: "var(--text-primary)" }}>Recent Transactions</h3>
-                <button style={{ fontSize: "12px", color: "var(--primary)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>View All</button>
+                <button onClick={() => setShowModal(true)} style={{ fontSize: "12px", color: "var(--primary)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>+ Add</button>
               </div>
-              {recentTx.map((tx, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", paddingBottom: "10px", borderBottom: i < recentTx.length - 1 ? "1px solid var(--border)" : "none", marginBottom: "10px" }}>
+              {txList.map((tx, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", paddingBottom: "10px", borderBottom: i < txList.length - 1 ? "1px solid var(--border)" : "none", marginBottom: "10px" }}>
                   <div style={{ width: 34, height: 34, borderRadius: "9px", background: "var(--bg-soft)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>{tx.icon}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: "12px", fontWeight: 600, color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tx.desc}</div>
@@ -294,8 +334,9 @@ export default function Dashboard() {
       </div>
 
       <style>{`
-        .sidebar-desktop { left: 0 !important; }
+        .sidebar-desktop { left: 0; transition: transform 0.3s ease; }
         @media (max-width: 1024px) {
+          .sidebar-desktop { transform: translateX(-100%); }
           .main-content { margin-left: 0 !important; }
           .mobile-menu-btn { display: flex !important; }
           .kpi-grid { grid-template-columns: repeat(2,1fr) !important; }
