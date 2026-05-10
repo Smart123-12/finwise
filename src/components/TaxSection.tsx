@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { Check, ArrowRight, IndianRupee } from "lucide-react";
 
 const deductions = [
@@ -106,9 +107,9 @@ export default function TaxSection() {
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <a href="/tax" className="btn-primary" style={{ background: "var(--gradient-green)", boxShadow: "0 8px 25px rgba(16,185,129,0.3)" }}>
+          <Link href="/tax" className="btn-primary" style={{ background: "var(--gradient-green)", boxShadow: "0 8px 25px rgba(16,185,129,0.3)" }}>
             <IndianRupee size={18} /> Calculate My Tax Now <ArrowRight size={18} />
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { ArrowRight, Sparkles, Play, Shield } from "lucide-react";
 
 export default function Hero() {
@@ -49,9 +50,9 @@ export default function Hero() {
             </p>
 
             <div className="animate-fade-in-up delay-300" style={{ display: "flex", gap: "14px", flexWrap: "wrap", marginBottom: "44px" }}>
-              <a href="/dashboard" className="btn-primary" style={{ fontSize: "15px", padding: "14px 28px" }}>
+              <Link href="/dashboard" className="btn-primary" style={{ fontSize: "15px", padding: "14px 28px" }}>
                 Start Free — No Card <ArrowRight size={17} />
-              </a>
+              </Link>
               <button style={{
                 display: "inline-flex", alignItems: "center", gap: "10px",
                 padding: "13px 22px", borderRadius: "50px",

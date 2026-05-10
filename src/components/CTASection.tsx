@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export default function CTASection() {
@@ -23,12 +24,12 @@ export default function CTASection() {
         </p>
 
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
-          <a href="/dashboard" className="btn-primary" style={{ fontSize: "15px", padding: "14px 28px" }}>
+          <Link href="/dashboard" className="btn-primary" style={{ fontSize: "15px", padding: "14px 28px" }}>
             Start Free — No Card <ArrowRight size={17} />
-          </a>
-          <a href="/tax" className="btn-secondary">
+          </Link>
+          <Link href="/tax" className="btn-secondary">
             Calculate Tax Free
-          </a>
+          </Link>
         </div>
 
         <p style={{ color: "var(--text-muted)", fontSize: "12px", marginTop: "20px" }}>
