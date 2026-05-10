@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Wallet, Calculator, Shield, TrendingUp, Bot,
   Target, Bell, Settings, LogOut, Menu, ArrowUp, ArrowDown, Plus, Sparkles,
@@ -8,12 +9,12 @@ import {
 import { AreaChart, Area, PieChart as RePieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const navItems = [
-  { icon: <LayoutDashboard size={17} />, label: "Dashboard", href: "/dashboard", active: true },
+  { icon: <LayoutDashboard size={17} />, label: "Dashboard", href: "/dashboard" },
   { icon: <Wallet size={17} />, label: "Expenses", href: "/dashboard" },
   { icon: <Calculator size={17} />, label: "Tax Planner", href: "/tax" },
   { icon: <Shield size={17} />, label: "Insurance", href: "/dashboard" },
   { icon: <TrendingUp size={17} />, label: "Investments", href: "/dashboard" },
-  { icon: <Bot size={17} />, label: "AI Advisor", href: "/dashboard" },
+  { icon: <Bot size={17} />, label: "AI Advisor", href: "/advisor" },
   { icon: <Target size={17} />, label: "Goals", href: "/dashboard" },
   { icon: <Bell size={17} />, label: "Reminders", href: "/dashboard" },
 ];
@@ -57,11 +58,12 @@ const goals = [
   { name: "New Car", target: 400000, current: 128000, color: "#F8B48E", icon: "🚗" },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ children }: { children?: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [txForm, setTxForm] = useState({ desc: "", amt: "", cat: "Food", type: "expense" });
   const [txList, setTxList] = useState(recentTx);
+  const pathname = usePathname();
 
   const addTransaction = () => {
     if (!txForm.desc || !txForm.amt) return;
@@ -129,17 +131,19 @@ export default function Dashboard() {
         </div>
 
         <nav style={{ flex: 1, padding: "10px 10px", overflowY: "auto" }}>
-          {navItems.map((item) => (
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
             <Link key={item.label} href={item.href} style={{
               display: "flex", alignItems: "center", gap: "10px", padding: "9px 12px", borderRadius: "10px", marginBottom: "2px",
               textDecoration: "none",
-              background: item.active ? "var(--primary-pastel)" : "transparent",
-              color: item.active ? "var(--primary-dark)" : "var(--text-secondary)",
-              fontWeight: item.active ? 700 : 500, fontSize: "13px", transition: "all 0.2s",
+              background: isActive ? "var(--primary-pastel)" : "transparent",
+              color: isActive ? "var(--primary-dark)" : "var(--text-secondary)",
+              fontWeight: isActive ? 700 : 500, fontSize: "13px", transition: "all 0.2s",
             }}>
               {item.icon} {item.label}
             </Link>
-          ))}
+          )})}
         </nav>
 
         <div style={{ padding: "10px", borderTop: "1px solid var(--border)" }}>
@@ -182,8 +186,10 @@ export default function Dashboard() {
         </header>
 
         <div style={{ padding: "22px" }}>
-          {/* KPIs */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "14px", marginBottom: "20px" }} className="kpi-grid">
+          {children ? children : (
+            <>
+              {/* KPIs */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "14px", marginBottom: "20px" }} className="kpi-grid">
             {[
               { label: "Monthly Income", val: "₹85,000", change: "+8%", icon: <ArrowUp size={12} />, color: "var(--secondary)", bg: "var(--secondary-pastel)" },
               { label: "Total Expenses", val: "₹52,300", change: "-3%", icon: <ArrowDown size={12} />, color: "var(--accent)", bg: "var(--accent-pastel)" },
@@ -330,6 +336,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+          </>)}
         </div>
       </div>
 

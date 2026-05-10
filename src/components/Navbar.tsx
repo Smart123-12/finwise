@@ -9,8 +9,8 @@ const navLinks = [
     submenu: [
       { label: "Expense Tracker", href: "#features" },
       { label: "Tax Calculator", href: "/tax", isInternal: true },
+      { label: "AI Advisor", href: "/advisor", isInternal: true },
       { label: "Insurance", href: "#insurance" },
-      { label: "Investments", href: "#investments" },
     ],
   },
   { label: "Tax Planner", href: "/tax", isInternal: true },
